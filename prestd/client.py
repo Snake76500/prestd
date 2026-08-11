@@ -253,6 +253,119 @@ class PrestClient:
         sch = schema or self.config.default_schema
         return TableAccessor(client=self, database=db, schema=sch, table=table_name)
 
+    def find(
+        self,
+        table: str,
+        query: Any | None = None,
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> list[Any]:
+        """Shortcut to find records in a table without SQL scripts."""
+        return self.table(table, database=database, schema=schema).find(query=query, model=model)
+
+    def find_one(
+        self,
+        table: str,
+        query: Any | None = None,
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> Any | None:
+        """Shortcut to fetch a single record from a table."""
+        return self.table(table, database=database, schema=schema).find_one(query=query, model=model)
+
+    def get(
+        self,
+        table: str,
+        pk_value: Any,
+        pk_field: str = "id",
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> Any | None:
+        """Shortcut to fetch a single record by its primary key."""
+        return self.table(table, database=database, schema=schema).get(pk_value, pk_field=pk_field, model=model)
+
+    def insert(
+        self,
+        table: str,
+        data: Any,
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> Any:
+        """Shortcut to insert a record into a table."""
+        return self.table(table, database=database, schema=schema).insert(data, model=model)
+
+    def insert_many(
+        self,
+        table: str,
+        items: list[Any],
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> list[Any]:
+        """Shortcut to batch insert records into a table."""
+        return self.table(table, database=database, schema=schema).insert_many(items, model=model)
+
+    def update(
+        self,
+        table: str,
+        pk_value: Any,
+        data: Any,
+        pk_field: str = "id",
+        *,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> dict[str, Any]:
+        """Shortcut to update a record by primary key."""
+        return self.table(table, database=database, schema=schema).update_by_id(pk_value, data, pk_field=pk_field)
+
+    def delete(
+        self,
+        table: str,
+        pk_value: Any,
+        pk_field: str = "id",
+        *,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> dict[str, Any]:
+        """Shortcut to delete a record by primary key."""
+        return self.table(table, database=database, schema=schema).delete_by_id(pk_value, pk_field=pk_field)
+
+    def count(
+        self,
+        table: str,
+        query: Any | None = None,
+        *,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> int:
+        """Shortcut to count records in a table."""
+        return self.table(table, database=database, schema=schema).count(query=query)
+
+    def paginate(
+        self,
+        table: str,
+        query: Any | None = None,
+        page: int = 1,
+        page_size: int = 10,
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> Any:
+        """Shortcut to paginate table records."""
+        return self.table(table, database=database, schema=schema).paginate(
+            query=query, page=page, page_size=page_size, model=model
+        )
+
 
 class AsyncPrestClient:
     """
@@ -437,3 +550,116 @@ class AsyncPrestClient:
             raise PrestValidationError("Database name must be specified or set as default_database in client config")
         sch = schema or self.config.default_schema
         return AsyncTableAccessor(client=self, database=db, schema=sch, table=table_name)
+
+    async def find(
+        self,
+        table: str,
+        query: Any | None = None,
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> list[Any]:
+        """Shortcut to find records asynchronously without SQL scripts."""
+        return await self.table(table, database=database, schema=schema).find(query=query, model=model)
+
+    async def find_one(
+        self,
+        table: str,
+        query: Any | None = None,
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> Any | None:
+        """Shortcut to fetch a single record asynchronously."""
+        return await self.table(table, database=database, schema=schema).find_one(query=query, model=model)
+
+    async def get(
+        self,
+        table: str,
+        pk_value: Any,
+        pk_field: str = "id",
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> Any | None:
+        """Shortcut to fetch a single record by primary key asynchronously."""
+        return await self.table(table, database=database, schema=schema).get(pk_value, pk_field=pk_field, model=model)
+
+    async def insert(
+        self,
+        table: str,
+        data: Any,
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> Any:
+        """Shortcut to insert a record asynchronously."""
+        return await self.table(table, database=database, schema=schema).insert(data, model=model)
+
+    async def insert_many(
+        self,
+        table: str,
+        items: list[Any],
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> list[Any]:
+        """Shortcut to batch insert records asynchronously."""
+        return await self.table(table, database=database, schema=schema).insert_many(items, model=model)
+
+    async def update(
+        self,
+        table: str,
+        pk_value: Any,
+        data: Any,
+        pk_field: str = "id",
+        *,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> dict[str, Any]:
+        """Shortcut to update a record by primary key asynchronously."""
+        return await self.table(table, database=database, schema=schema).update_by_id(pk_value, data, pk_field=pk_field)
+
+    async def delete(
+        self,
+        table: str,
+        pk_value: Any,
+        pk_field: str = "id",
+        *,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> dict[str, Any]:
+        """Shortcut to delete a record by primary key asynchronously."""
+        return await self.table(table, database=database, schema=schema).delete_by_id(pk_value, pk_field=pk_field)
+
+    async def count(
+        self,
+        table: str,
+        query: Any | None = None,
+        *,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> int:
+        """Shortcut to count records asynchronously."""
+        return await self.table(table, database=database, schema=schema).count(query=query)
+
+    async def paginate(
+        self,
+        table: str,
+        query: Any | None = None,
+        page: int = 1,
+        page_size: int = 10,
+        *,
+        model: Any | None = None,
+        database: str | None = None,
+        schema: str | None = None,
+    ) -> Any:
+        """Shortcut to paginate table records asynchronously."""
+        return await self.table(table, database=database, schema=schema).paginate(
+            query=query, page=page, page_size=page_size, model=model
+        )
